@@ -1,2 +1,2 @@
 # spark-kotlin
-A thin idiomatic kotlin layer for spark
+A thin idiomatic kotlin layer for spark, author @lallemupp
