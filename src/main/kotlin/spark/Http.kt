@@ -16,24 +16,98 @@
 
 package spark
 
-open class RequestHandler {
-    val start: Long = System.currentTimeMillis()
+class RouteHandler(val request: Request, val response: Response) {
 
-    fun requestTime(): Long {
-        return System.currentTimeMillis() - start
+    // Implicit access of Request functions
+
+    fun body(): String {
+        return request.body();
     }
+
+    fun bodyAsBytes(): ByteArray? {
+        return request.bodyAsBytes();
+    }
+
+    fun params(name: String): String {
+        return request.params(name)
+    }
+
+    fun queryParams(key: String): String {
+        return request.queryParams(key)
+    }
+
+    fun queryMap(): QueryParamsMap {
+        return request.queryMap()
+    }
+
+    fun queryMap(key: String): QueryParamsMap {
+        return request.queryMap(key)
+    }
+
+    fun attribute(key: String): String {
+        return request.attribute(key);
+    }
+
+    fun attribute(key: String, value: String) {
+        request.attribute(key, value);
+    }
+
+    fun attributes(): MutableSet<String>? {
+        return request.attributes();
+    }
+
+    fun session(): Session? {
+        return request.session()
+    }
+
+    fun session(create: Boolean): Session? {
+        return request.session(create)
+    }
+
+    fun cookie(name: String): String {
+        return request.cookie(name)
+    }
+
+    fun cookies(): MutableMap<String, String>? {
+        return request.cookies()
+    }
+
+    fun uri(): String {
+        return request.uri()
+    }
+
+    fun protocol(): String {
+        return request.protocol()
+    }
+
+    // Implicit access of Response functions
+
+    fun status(): Int {
+        return response.status()
+    }
+
+    fun status(code: Int) {
+        response.status(code)
+    }
+
 }
 
-class RouteHandler(val request: Request, val response: Response) : RequestHandler()
-class FilterHandler(val request: Request, val response: Response) : RequestHandler()
 
+class FilterHandler(val req: Request, val res: Response) {
+
+    val request : Request = req
+    val response : Response = res
+
+
+
+}
 /**
  * The route class that takes a Spark service and wraps the route methods to enable fancy syntax
  * with access to request and response parameters in the route code.
  *
  * @para service The [Spark] service that will be wrapped.
  */
-class Routes(val service: Service) {
+class Http(val service: Service) {
 
     val DEFAULT_ACCEPT = "*/*"
 
