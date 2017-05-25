@@ -4,8 +4,8 @@ A thin idiomatic kotlin layer for spark
 
 Authors:
 --------
-@perwendel
-@lallemupp
+- Per Wendel, @perwendel
+- Love Löfdahl, @lallemupp
 
 Syntax:
 -------
