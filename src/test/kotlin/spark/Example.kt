@@ -38,4 +38,8 @@ fun main(args: Array<String>) {
         params(":name")
     }
 
+    http.get("/redirect") {
+        redirect("/hello");
+    }
+
 }

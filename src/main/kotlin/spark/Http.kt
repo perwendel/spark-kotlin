@@ -91,6 +91,13 @@ class RouteHandler(val request: Request, val response: Response) {
         response.status(code)
     }
 
+    fun redirect(location: String) {
+        response.redirect(location)
+    }
+
+    fun redirect(location: String, statusCode: Int) {
+        response.redirect(location, statusCode  )
+    }
 }
 
 
