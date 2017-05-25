@@ -3,10 +3,12 @@
 A thin idiomatic kotlin layer for spark
 
 Authors:
+--------
 @perwendel
 @lallemupp
 
 Syntax:
+-------
 
 ```kotlin
 http.get("/hello") {
