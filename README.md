@@ -23,4 +23,8 @@ http.get("/nothing") {
 http.get("/saymy/:name") {
     params(":name")
 }
+
+http.get("/redirect") {
+    redirect("/hello");
+}
 ```
