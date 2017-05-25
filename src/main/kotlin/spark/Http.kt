@@ -15,10 +15,12 @@
  */
 package spark
 
+// TODO: Add implicit access functions for the methods in request and response that make sense
 class RouteHandler(val request: Request, val response: Response) {
 
     // Implicit access of Request functions
 
+    // TODO: does this make sense, available both in request and response
     fun body(): String {
         return request.body();
     }
