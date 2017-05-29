@@ -1,6 +1,6 @@
 # spark-kotlin
 
-A thin idiomatic kotlin layer for spark
+A Spark DSL in idiomatic kotlin.
 
 Authors:
 --------
