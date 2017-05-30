@@ -245,6 +245,15 @@ fun internalServerError(function: RouteHandler.() -> Any) {
 
 //----------------- TODO: Web sockets -----------------//
 
+//----------------- TODO: exception mapping -----------------//
+
+/**
+ * Stops the Spark server and clears all routes
+ */
+fun stop() {
+    Spark.stop()
+}
+
 // STATIC API END
 
 /**
