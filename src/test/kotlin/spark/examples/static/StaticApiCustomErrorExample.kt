@@ -14,10 +14,10 @@ fun main(args: Array<String>) {
     }
 
     internalServerError {
-        "<html><body>YOU FUCKED UP!</body></html>"
+        "<html><body>YOU FUCKED UP, STATICALLY!</body></html>"
     }
 
     notFound {
-        "NOT FOUND MAN!"
+        "STATIC NOT FOUND MAN!"
     }
 }

@@ -23,6 +23,56 @@ val staticFiles: Service.StaticFiles = Spark.staticFiles
 //----------------- Redirect -----------------//
 val redirect: Redirect = Spark.redirect
 
+/**
+ * Gets the port
+ */
+fun port(): Int {
+    return Spark.port()
+}
+
+/**
+ * Sets the port. 0 then an arbitrary available port will be used
+ */
+fun port(number: Int) {
+    Spark.port(number)
+}
+
+/**
+ * Set the connection to be secure (HTTPS)
+ */
+fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String) {
+    Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword)
+}
+
+/**
+ * Set the connection to be secure (HTTPS)
+ */
+fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean) {
+    Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
+}
+
+/**
+ * Sets the ip address
+ */
+fun ipAddress(ipAddress: String) {
+    Spark.ipAddress(ipAddress)
+}
+
+/**
+ * Sets the embedded server's thread pool max size.
+ */
+fun threadPool(maxSize: Int) {
+    Spark.threadPool(maxSize)
+}
+
+/**
+ * Sets the embedded server's thread pool max size, minSize and idle timeout (ms)
+ */
+fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
+    Spark.threadPool(maxSize, minSize, idleTimeoutMillis)
+}
+
+
 //----------------- Route & filter mappings -----------------//
 
 /**
@@ -246,6 +296,24 @@ fun internalServerError(function: RouteHandler.() -> Any) {
 //----------------- TODO: Web sockets -----------------//
 
 //----------------- TODO: exception mapping -----------------//
+
+//----------------- Halts -----------------//
+
+fun halt(): HaltException {
+    return Spark.halt()
+}
+
+fun halt(body: String): HaltException {
+    return Spark.halt(body)
+}
+
+fun halt(code: Int): HaltException {
+    return Spark.halt(code)
+}
+
+fun halt(code: Int, body: String): HaltException {
+    return Spark.halt(code, body)
+}
 
 /**
  * Stops the Spark server and clears all routes
@@ -700,6 +768,61 @@ class Http(val service: Service) {
     val staticFiles: Service.StaticFiles = service.staticFiles
     //----------------- Redirect -----------------//
     val redirect: Redirect = service.redirect
+
+    /**
+     * Gets the port
+     */
+    fun port(): Int {
+        return service.port()
+    }
+
+    /**
+     * Sets the port. 0 then an arbitrary available port will be used
+     */
+    fun port(number: Int): Http {
+        service.port(number)
+        return this
+    }
+
+    /**
+     * Set the connection to be secure (HTTPS)
+     */
+    fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String): Http {
+        service.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword)
+        return this
+    }
+
+    /**
+     * Set the connection to be secure (HTTPS)
+     */
+    fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean): Http {
+        service.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
+        return this
+    }
+
+    /**
+     * Sets the ip address
+     */
+    fun ipAddress(ipAddress: String): Http {
+        service.ipAddress(ipAddress)
+        return this
+    }
+
+    /**
+     * Sets the embedded server's thread pool max size.
+     */
+    fun threadPool(maxSize: Int): Http {
+        service.threadPool(maxSize)
+        return this
+    }
+
+    /**
+     * Sets the embedded server's thread pool max size, minSize and idle timeout (ms)
+     */
+    fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int): Http {
+        service.threadPool(maxSize, minSize, idleTimeoutMillis)
+        return this
+    }
 
     /**
      * Stops the Spark server and clears all routes

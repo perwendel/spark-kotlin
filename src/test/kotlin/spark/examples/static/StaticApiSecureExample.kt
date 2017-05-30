@@ -15,48 +15,35 @@
  */
 package spark.examples.static
 
-import spark.*
+import spark.examples.testutil.keyStoreLocation
+import spark.examples.testutil.keystorePassword
+import spark.examples.testutil.trustStoreLocation
+import spark.examples.testutil.trustStorePassword
+import spark.get
+import spark.notFound
+import spark.port
+import spark.secure
 
 /**
  * Example usage of spark-kotlin via STATIC API.
  */
 fun main(args: Array<String>) {
 
-    staticFiles.location("/public")
+    port(4321)
+    secure(
+            keyStoreLocation(),
+            keystorePassword(),
+            trustStoreLocation(),
+            trustStorePassword())
 
+    // when accessing don't forget https
     get("/hello") {
-        "Hello Static Spark Kotlin"
+        "Hello Secure Static Spark Kotlin"
     }
 
-    get("/halt") {
-        halt(201, "created!")
+    notFound {
+        "there's nothing here"
     }
-
-    get("/nothing") {
-        status(404)
-        "Oops, we couldn't find what you're looking for"
-    }
-
-    get("/saymy/:name") {
-        params(":name")
-    }
-
-    get("/redirect") {
-        redirect("/hello");
-    }
-
-    before("/hello") {
-        println("Before Hello")
-    }
-
-    after("/hello") {
-        println("After Hello")
-    }
-
-    finally {
-        println("At last")
-    }
-
-    redirect.any("/to", "/hello")
 
 }
+

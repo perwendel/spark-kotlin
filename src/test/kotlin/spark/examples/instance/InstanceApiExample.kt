@@ -16,10 +16,12 @@
 package spark.examples.instance
 
 import spark.Http
+import spark.halt
 import spark.ignite
 
 /**
  * Example usage of spark-kotlin via instance API. YOU SHOULD NAME THE SPARK INSTANCE 'http' FOR EXPRESSIVE/DECLARATIVE PURPOSES.
+ * If you don't it's blasphemy.
  */
 fun main(args: Array<String>) {
 
@@ -29,6 +31,10 @@ fun main(args: Array<String>) {
 
     http.get("/hello") {
         "Hello Spark Kotlin"
+    }
+
+    http.get("/halt") {
+        halt(201, "created!")
     }
 
     http.get("/nothing") {
