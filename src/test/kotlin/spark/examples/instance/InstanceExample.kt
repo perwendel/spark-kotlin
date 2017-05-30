@@ -25,6 +25,8 @@ fun main(args: Array<String>) {
 
     val http: Http = ignite()
 
+    http.staticFiles.location("/public")
+
     http.get("/hello") {
         "Hello Spark Kotlin"
     }
@@ -54,6 +56,6 @@ fun main(args: Array<String>) {
         println("At last")
     }
 
-    http.stop()
+    http.redirect.any("/to", "/hello")
 
 }

@@ -22,6 +22,8 @@ import spark.*
  */
 fun main(args: Array<String>) {
 
+    staticFiles.location("/public")
+
     get("/hello") {
         "Hello Static Spark Kotlin"
     }
@@ -54,5 +56,7 @@ fun main(args: Array<String>) {
     finally {
         println("At last")
     }
+
+    redirect.any("/to", "/hello")
 
 }

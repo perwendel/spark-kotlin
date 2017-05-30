@@ -18,6 +18,11 @@ package spark
 // STATIC API BEGIN
 val DEFAULT_ACCEPT = "*/*"
 
+//----------------- Static files -----------------//
+val staticFiles: Service.StaticFiles = Spark.staticFiles
+//----------------- Redirect -----------------//
+val redirect: Redirect = Spark.redirect
+
 //----------------- Route & filter mappings -----------------//
 
 /**
@@ -681,6 +686,11 @@ class Http(val service: Service) {
             function(RouteHandler(req, res))
         }
     }
+
+    //----------------- Static files -----------------//
+    val staticFiles: Service.StaticFiles = service.staticFiles
+    //----------------- Redirect -----------------//
+    val redirect: Redirect = service.redirect
 
     /**
      * Stops the Spark server and clears all routes
