@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package spark.examples
+package spark.examples.instance
 
 import spark.Http
 import spark.ignite
@@ -53,5 +53,7 @@ fun main(args: Array<String>) {
     http.finally {
         println("At last")
     }
+
+    http.stop()
 
 }

@@ -13,7 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package spark.examples
+package spark.examples.static
 
 import spark.*
 
@@ -29,6 +29,10 @@ fun main(args: Array<String>) {
     get("/nothing") {
         status(404)
         "Oops, we couldn't find what you're looking for"
+    }
+
+    get("/internalerror") {
+        throw RuntimeException("bajje")
     }
 
     get("/saymy/:name") {

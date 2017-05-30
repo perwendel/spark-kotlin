@@ -18,6 +18,8 @@ package spark
 // STATIC API BEGIN
 val DEFAULT_ACCEPT = "*/*"
 
+//----------------- Route & filter mappings -----------------//
+
 /**
  * Represents a HTTP GET request.
  *
@@ -220,12 +222,30 @@ fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
     })
     if (path == null) Spark.afterAfter(filter) else Spark.afterAfter(path, filter)
 }
+
+//----------------- Custom error pages -----------------//
+fun notFound(function: RouteHandler.() -> Any) {
+    Spark.notFound() {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun internalServerError(function: RouteHandler.() -> Any) {
+    Spark.internalServerError() {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+//----------------- TODO: Web sockets -----------------//
+
 // STATIC API END
 
 /**
  * Ignites a Spark (HTTP) instance.
  */
-fun ignite() : Http {
+fun ignite(): Http {
     return Http(Service.ignite())
 }
 
@@ -444,7 +464,7 @@ class Http(val service: Service) {
     val DEFAULT_ACCEPT = "*/*"
 
     /**
-     * Represents a HTTP GET request.
+     * Map the route for HTTP GET requests
      *
      * @param path The path to listen to.
      * @param accepts The accept type to listen to. Defaults to all accept types.
@@ -644,5 +664,28 @@ class Http(val service: Service) {
             function(RouteHandler(req, res))
         })
         if (path == null) service.afterAfter(filter) else service.afterAfter(path, filter)
+    }
+
+
+    //----------------- Custom error pages -----------------//
+    fun notFound(function: RouteHandler.() -> Any) {
+        service.notFound() {
+            req, res ->
+            function(RouteHandler(req, res))
+        }
+    }
+
+    fun internalServerError(function: RouteHandler.() -> Any) {
+        service.internalServerError() {
+            req, res ->
+            function(RouteHandler(req, res))
+        }
+    }
+
+    /**
+     * Stops the Spark server and clears all routes
+     */
+    fun stop() {
+        service.stop()
     }
 }
