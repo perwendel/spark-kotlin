@@ -1,7 +1,15 @@
-package PACKAGE_NAME;
-
 /**
- * Created by Per Wendel on 2017-05-30.
+ * Class to trick Maven believe in javadoc
  */
-public class JavadocDummy {
+class JavadocDummy {
+
+    /**
+     * Print the number
+     *
+     * @param number the number
+     */
+    public void dummy(int number) {
+        System.out.println("number = " + number);
+    }
+
 }
