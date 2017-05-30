@@ -1,8 +1,8 @@
 package spark.examples.static
 
-import spark.get
-import spark.internalServerError
-import spark.notFound
+import spark.kotlin.get
+import spark.kotlin.internalServerError
+import spark.kotlin.notFound
 
 /**
  * Example usage of spark-kotlin custom error pages via STATIC API.

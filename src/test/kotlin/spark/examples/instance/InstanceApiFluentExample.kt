@@ -1,11 +1,11 @@
 package spark.examples.instance
 
-import spark.Http
+import spark.kotlin.Http
 import spark.examples.testutil.keyStoreLocation
 import spark.examples.testutil.keystorePassword
 import spark.examples.testutil.trustStoreLocation
 import spark.examples.testutil.trustStorePassword
-import spark.ignite
+import spark.kotlin.ignite
 
 /**
  * Fluent Initialization

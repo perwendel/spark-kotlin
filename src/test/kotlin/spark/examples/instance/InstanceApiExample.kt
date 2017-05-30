@@ -15,9 +15,9 @@
  */
 package spark.examples.instance
 
-import spark.Http
-import spark.halt
-import spark.ignite
+import spark.kotlin.Http
+import spark.kotlin.halt
+import spark.kotlin.ignite
 
 /**
  * Example usage of spark-kotlin via instance API. YOU SHOULD NAME THE SPARK INSTANCE 'http' FOR EXPRESSIVE/DECLARATIVE PURPOSES.

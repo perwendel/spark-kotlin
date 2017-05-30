@@ -19,10 +19,10 @@ import spark.examples.testutil.keyStoreLocation
 import spark.examples.testutil.keystorePassword
 import spark.examples.testutil.trustStoreLocation
 import spark.examples.testutil.trustStorePassword
-import spark.get
-import spark.notFound
-import spark.port
-import spark.secure
+import spark.kotlin.get
+import spark.kotlin.notFound
+import spark.kotlin.port
+import spark.kotlin.secure
 
 /**
  * Example usage of spark-kotlin via STATIC API.

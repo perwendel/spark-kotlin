@@ -15,7 +15,7 @@
  */
 package spark.examples.static
 
-import spark.*
+import spark.kotlin.*
 
 /**
  * Example usage of spark-kotlin via STATIC API.

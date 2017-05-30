@@ -1,7 +1,7 @@
 package spark.examples.static
 
-import spark.Http
-import spark.ignite
+import spark.kotlin.Http
+import spark.kotlin.ignite
 
 /**
  * Example usage of spark-kotlin custom error pages via STATIC API.
