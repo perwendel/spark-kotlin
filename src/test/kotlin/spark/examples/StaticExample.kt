@@ -15,39 +15,40 @@
  */
 package spark.examples
 
-import spark.Http
-import spark.ignite
+import spark.*
 
 /**
- * Example usage of spark-kotlin
+ * Example usage of spark-kotlin via STATIC API.
  */
 fun main(args: Array<String>) {
 
-    val http: Http = ignite()
-
-    http.get("/hello") {
-        "Hello Spark Kotlin"
+    get("/hello") {
+        "Hello Static Spark Kotlin"
     }
 
-    http.get("/nothing") {
+    get("/nothing") {
         status(404)
         "Oops, we couldn't find what you're looking for"
     }
 
-    http.get("/saymy/:name") {
+    get("/saymy/:name") {
         params(":name")
     }
 
-    http.get("/redirect") {
+    get("/redirect") {
         redirect("/hello");
     }
 
-    http.before("/hello") {
+    before("/hello") {
         println("Before Hello")
     }
 
-    http.after("/hello") {
+    after("/hello") {
         println("After Hello")
+    }
+
+    finally {
+        println("At last")
     }
 
 }

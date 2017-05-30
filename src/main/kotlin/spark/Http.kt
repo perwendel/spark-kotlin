@@ -15,6 +15,213 @@
  */
 package spark
 
+// STATIC API BEGIN
+val DEFAULT_ACCEPT = "*/*"
+
+/**
+ * Represents a HTTP GET request.
+ *
+ * @param path The path to listen to.
+ * @param accepts The accept type to listen to. Defaults to all accept types.
+ * @param function The function that handles the request.
+ */
+fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.get(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.get(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun get(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.get(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.post(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.post(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun post(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.post(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer);
+}
+
+fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.put(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.put(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun put(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.post(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.delete(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.delete(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun delete(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.delete(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.head(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.head(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun head(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.head(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.trace(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.trace(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun trace(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.trace(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.options(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.options(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun options(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.options(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.patch(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.patch(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun patch(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.patch(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
+    Spark.connect(path, accepts) {
+        req, res ->
+        function(RouteHandler(req, res))
+    }
+}
+
+fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
+    Spark.connect(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+        return function(RouteHandler(req, res))
+    }), templateEngine)
+}
+
+fun connect(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
+    Spark.connect(path, accepts, Route(fun(req, res) {
+        function(RouteHandler(req, res))
+    }), responseTransformer)
+}
+
+fun before(filter: Filter, accepts: String = DEFAULT_ACCEPT) {
+    Spark.before(filter)
+}
+
+fun before(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
+    val filter = Filter(fun(req, res) {
+        function(RouteHandler(req, res))
+    })
+    if (path == null) Spark.before(filter) else Spark.before(path, accepts, filter)
+}
+
+fun after(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
+    val filter = Filter(fun(req, res) {
+        function(RouteHandler(req, res))
+    })
+    if (path == null) Spark.after(filter) else Spark.after(path, accepts, filter)
+}
+
+fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
+    val filter = Filter(fun(req, res) {
+        function(RouteHandler(req, res))
+    })
+    if (path == null) Spark.afterAfter(filter) else Spark.afterAfter(path, filter)
+}
+// STATIC API END
+
 /**
  * Ignites a Spark (HTTP) instance.
  */
@@ -432,7 +639,7 @@ class Http(val service: Service) {
         if (path == null) service.after(filter) else service.after(path, accepts, filter)
     }
 
-    fun afterAfter(path: String? = null, function: RouteHandler.() -> Unit) {
+    fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
         val filter = Filter(fun(req, res) {
             function(RouteHandler(req, res))
         })
