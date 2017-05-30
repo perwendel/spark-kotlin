@@ -42,4 +42,12 @@ fun main(args: Array<String>) {
         redirect("/hello");
     }
 
+    http.before("/hello") {
+        println("Before Hello")
+    }
+
+    http.after("/hello") {
+        println("After Hello")
+    }
+
 }

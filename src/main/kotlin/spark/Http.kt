@@ -15,100 +15,210 @@
  */
 package spark
 
-// TODO: Add implicit access functions for the methods in request and response that make sense
 class RouteHandler(val request: Request, val response: Response) {
 
     // Implicit access of Request functions
 
-    // TODO: does this make sense, available both in request and response
-    fun body(): String {
-        return request.body();
-    }
-
-    fun bodyAsBytes(): ByteArray? {
-        return request.bodyAsBytes();
-    }
-
+    /**
+     * Gets the request path parameter.
+     */
     fun params(name: String): String {
         return request.params(name)
     }
 
+    /**
+     * Gets all request path parameters.
+     */
+    fun params(): MutableMap<String, String>? {
+        return request.params();
+    }
+
+    /**
+     * Gets the request splat (wildcard) parameters.
+     */
+    fun splat(): Array<out String>? {
+        return request.splat()
+    }
+
+    /**
+     * Gets the request content type.
+     */
+    fun contentType(): String {
+        return request.contentType()
+    }
+
+    /**
+     * Gets the request query param.
+     */
     fun queryParams(key: String): String {
         return request.queryParams(key)
     }
 
+    /**
+     * Gets the request queryMap.
+     */
     fun queryMap(): QueryParamsMap {
         return request.queryMap()
     }
 
+    /**
+     * Gets the request queryMap for key.
+     */
     fun queryMap(key: String): QueryParamsMap {
         return request.queryMap(key)
     }
 
+    /**
+     * Gets request attribute.
+     */
     fun attribute(key: String): String {
         return request.attribute(key);
     }
 
+    /**
+     * Sets request attribute.
+     */
     fun attribute(key: String, value: String) {
         request.attribute(key, value);
     }
 
+    /**
+     * Gets the request attributes.
+     */
     fun attributes(): MutableSet<String>? {
         return request.attributes();
     }
 
-    fun session(): Session? {
+    /**
+     * Gets the request session, if no exists one is created.
+     */
+    fun session(): Session {
         return request.session()
     }
 
+    /**
+     * Gets the request session, if no exists one is created if create is true.
+     */
     fun session(create: Boolean): Session? {
         return request.session(create)
     }
 
-    fun cookie(name: String): String {
-        return request.cookie(name)
-    }
-
-    fun cookies(): MutableMap<String, String>? {
-        return request.cookies()
-    }
-
+    /**
+     * Gets the request uri.
+     */
     fun uri(): String {
         return request.uri()
     }
 
+    /**
+     * Gets request protocol.
+     */
     fun protocol(): String {
         return request.protocol()
     }
 
+    /**
+     * Gets request scheme.
+     */
+    fun scheme(): String {
+        return request.scheme()
+    }
+
+    /**
+     * Gets the request host name (from HTTP request header "host")
+     */
+    fun host(): String {
+        return request.host()
+    }
+
+    /**
+     * Gets the server port
+     */
+    fun port(): Int {
+        return request.port()
+    }
+
+    /**
+     * Gets request path info.
+     */
+    fun pathInfo(): String {
+        return request.pathInfo()
+    }
+
+    /**
+     * Gets request servlet path.
+     */
+    fun servletPath(): String {
+        return request.servletPath()
+    }
+
+    /**
+     * Gets request context path.
+     */
+    fun contextPath(): String {
+        return request.contextPath()
+    }
+
+    /**
+     * Gets request user agent.
+     */
+    fun userAgent(): String {
+        return request.userAgent()
+    }
+
+    /**
+     * Gets request method.
+     */
+    fun requestMethod(): String {
+        return request.requestMethod()
+    }
+
+
     // Implicit access of Response functions
 
+    /**
+     * Gets the response status code.
+     */
     fun status(): Int {
         return response.status()
     }
 
+    /**
+     * Sets the response status code.
+     */
     fun status(code: Int) {
         response.status(code)
     }
 
+    /**
+     * Gets the response content type.
+     */
+    fun type(): String {
+        return response.type()
+    }
+
+    /**
+     * Sets the response content type.
+     */
+    fun type(contentType: String) {
+        response.type(contentType)
+    }
+
+    /**
+     * Redirects to location.
+     */
     fun redirect(location: String) {
         response.redirect(location)
     }
 
+    /**
+     * Redirects to location with statusCode.
+     */
     fun redirect(location: String, statusCode: Int) {
-        response.redirect(location, statusCode  )
+        response.redirect(location, statusCode)
     }
 }
 
-
-class FilterHandler(val req: Request, val res: Response) {
-
-    val request : Request = req
-    val response : Response = res
-
-
-
-}
 /**
  * The route class that takes a Spark service and wraps the route methods to enable fancy syntax
  * with access to request and response parameters in the route code.
@@ -128,146 +238,197 @@ class Http(val service: Service) {
      */
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.get(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.get(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.get(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.get(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.get(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.post(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.post(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.post(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.post(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer);
+        service.post(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer);
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.put(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.put(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.put(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.post(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.post(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.delete(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.delete(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res))}), templateEngine)
+        service.delete(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.delete(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.delete(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.head(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.head(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.head(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.head(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.head(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.trace(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.trace(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.trace(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.trace(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.trace(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.options(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.options(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.options(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.options(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res))}), responseTransformer)
+        service.options(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.patch(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.patch(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.patch(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.patch(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.patch(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
         service.connect(path, accepts) {
-            req, res -> function(RouteHandler(req, res))
+            req, res ->
+            function(RouteHandler(req, res))
         }
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-        service.connect(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView { return function(RouteHandler(req, res)) }), templateEngine)
+        service.connect(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
+            return function(RouteHandler(req, res))
+        }), templateEngine)
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.connect(path, accepts, Route(fun(req, res) { function(RouteHandler(req, res)) }), responseTransformer)
+        service.connect(path, accepts, Route(fun(req, res) {
+            function(RouteHandler(req, res))
+        }), responseTransformer)
     }
 
     fun before(filter: Filter, accepts: String = DEFAULT_ACCEPT) {
         service.before(filter)
     }
 
-    fun before(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: FilterHandler.() -> Unit) {
-        val filter = Filter(fun(req, res) { function(FilterHandler(req, res)) })
+    fun before(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
+        val filter = Filter(fun(req, res) {
+            function(RouteHandler(req, res))
+        })
         if (path == null) service.before(filter) else service.before(path, accepts, filter)
     }
 
-    fun after(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: FilterHandler.() -> Unit) {
-        val filter = Filter(fun(req, res) { function(FilterHandler(req, res)) })
+    fun after(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
+        val filter = Filter(fun(req, res) {
+            function(RouteHandler(req, res))
+        })
         if (path == null) service.after(filter) else service.after(path, accepts, filter)
     }
 
-    fun afterAfter(path: String? = null, function: FilterHandler.() -> Unit) {
-        val filter = Filter(fun(req, res) { function(FilterHandler(req, res)) })
+    fun afterAfter(path: String? = null, function: RouteHandler.() -> Unit) {
+        val filter = Filter(fun(req, res) {
+            function(RouteHandler(req, res))
+        })
         if (path == null) service.afterAfter(filter) else service.afterAfter(path, filter)
     }
 }
