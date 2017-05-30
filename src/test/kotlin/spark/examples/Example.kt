@@ -13,17 +13,17 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package spark
+package spark.examples
 
-import spark.Service.ignite
+import spark.Http
+import spark.ignite
 
 /**
  * Example usage of spark-kotlin
  */
 fun main(args: Array<String>) {
 
-    // Initialization syntax might change
-    val http: Http = Http(ignite())
+    val http: Http = ignite()
 
     http.get("/hello") {
         "Hello Spark Kotlin"

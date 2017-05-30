@@ -15,6 +15,13 @@
  */
 package spark
 
+/**
+ * Ignites a Spark (HTTP) instance.
+ */
+fun ignite() : Http {
+    return Http(Service.ignite())
+}
+
 class RouteHandler(val request: Request, val response: Response) {
 
     // Implicit access of Request functions
