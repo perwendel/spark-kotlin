@@ -15,6 +15,7 @@
  */
 package spark.examples.instance
 
+import org.omg.CosNaming.NamingContextPackage.NotFound
 import spark.kotlin.Http
 import spark.kotlin.halt
 import spark.kotlin.ignite
@@ -64,4 +65,14 @@ fun main(args: Array<String>) {
 
     http.redirect.any("/to", "/hello")
 
+    http.get("/exception") {
+        throw NotFoundException("You are lost my friend")
+    }
+
+    http.exception(NotFoundException::class) {
+        status(400)
+        response.body(exception.message)
+    }
 }
+
+class NotFoundException(message: String) : Exception(message)
