@@ -25,6 +25,6 @@ http.get("/saymy/:name") {
 }
 
 http.get("/redirect") {
-    redirect("/hello");
+    redirect("/hello")
 }
 ```
