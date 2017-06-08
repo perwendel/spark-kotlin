@@ -7,6 +7,22 @@ Authors:
 - Per Wendel, @perwendel
 - Love Löfdahl, @lallemupp
 
+Dependency:
+-----------
+Maven:
+```xml
+<dependency>
+    <groupId>com.sparkjava</groupId>
+    <artifactId>spark-kotlin</artifactId>
+    <version>1.0.0-alpha</version>
+</dependency>
+```
+
+Gradle:
+```groovy
+compile "com.sparkjava:spark-kotlin:1.0.0-alpha"
+```
+
 Syntax:
 -------
 
