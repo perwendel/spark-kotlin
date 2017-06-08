@@ -70,7 +70,7 @@ fun main(args: Array<String>) {
     }
 
     http.exception(NotFoundException::class) {
-        status(400)
+        status(404)
         response.body(exception.message)
     }
 }
