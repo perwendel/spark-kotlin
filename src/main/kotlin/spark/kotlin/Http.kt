@@ -99,8 +99,8 @@ fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun get(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.get(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.get(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -118,8 +118,8 @@ fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun post(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.post(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.post(path, accepts, Route(fun(req, res) : Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer);
 }
 
@@ -137,8 +137,8 @@ fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun put(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.post(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.post(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -156,8 +156,8 @@ fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templ
 }
 
 fun delete(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.delete(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.delete(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -175,8 +175,8 @@ fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun head(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.head(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.head(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -194,8 +194,8 @@ fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun trace(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.trace(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.trace(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -213,8 +213,8 @@ fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Temp
 }
 
 fun options(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.options(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.options(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -232,8 +232,8 @@ fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun patch(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.patch(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.patch(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -251,8 +251,8 @@ fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Temp
 }
 
 fun connect(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-    Spark.connect(path, accepts, Route(fun(req, res) {
-        function(RouteHandler(req, res))
+    Spark.connect(path, accepts, Route(fun(req, res): Any {
+        return function(RouteHandler(req, res))
     }), responseTransformer)
 }
 
@@ -371,8 +371,8 @@ class Http(val service: Service) {
     }
 
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.get(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.get(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -390,8 +390,8 @@ class Http(val service: Service) {
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.post(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.post(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer);
     }
 
@@ -409,8 +409,8 @@ class Http(val service: Service) {
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.post(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.post(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -428,8 +428,8 @@ class Http(val service: Service) {
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.delete(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.delete(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -447,8 +447,8 @@ class Http(val service: Service) {
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.head(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.head(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -466,8 +466,8 @@ class Http(val service: Service) {
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.trace(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.trace(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -485,8 +485,8 @@ class Http(val service: Service) {
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.options(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.options(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -504,8 +504,8 @@ class Http(val service: Service) {
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.patch(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.patch(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
@@ -523,8 +523,8 @@ class Http(val service: Service) {
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, responseTransformer: ResponseTransformer, function: RouteHandler.() -> Any) {
-        service.connect(path, accepts, Route(fun(req, res) {
-            function(RouteHandler(req, res))
+        service.connect(path, accepts, Route(fun(req, res): Any {
+            return function(RouteHandler(req, res))
         }), responseTransformer)
     }
 
