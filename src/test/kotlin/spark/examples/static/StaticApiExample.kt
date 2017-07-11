@@ -15,12 +15,14 @@
  */
 package spark.examples.static
 
+import spark.examples.testutil.SampleWebSocketHandler
 import spark.kotlin.*
 
 /**
  * Example usage of spark-kotlin via STATIC API.
  */
 fun main(args: Array<String>) {
+    webSocket("/ws", SampleWebSocketHandler::class)
 
     staticFiles.location("/public")
 

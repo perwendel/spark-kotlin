@@ -15,7 +15,7 @@
  */
 package spark.examples.instance
 
-import org.omg.CosNaming.NamingContextPackage.NotFound
+import spark.examples.testutil.SampleWebSocketHandler
 import spark.kotlin.Http
 import spark.kotlin.halt
 import spark.kotlin.ignite
@@ -27,6 +27,8 @@ import spark.kotlin.ignite
 fun main(args: Array<String>) {
 
     val http: Http = ignite()
+
+    http.webSocket("/ws", SampleWebSocketHandler::class)
 
     http.staticFiles.location("/public")
 
@@ -74,5 +76,6 @@ fun main(args: Array<String>) {
         response.body(exception.message)
     }
 }
+
 
 class NotFoundException(message: String) : Exception(message)
