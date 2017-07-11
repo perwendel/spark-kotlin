@@ -249,8 +249,8 @@ fun internalServerError(function: RouteHandler.() -> Any) {
  * @param url The URL to attach the WebSocket handler to.
  * @param handler A class annotated with Jetty's WebSocket annotations.
  */
-fun webSocket(url: String, handler: Class<*>) {
-    Spark.webSocket(url, handler)
+fun webSocket(url: String, handler: KClass<*>) {
+    Spark.webSocket(url, handler.java)
 }
 
 /**
@@ -492,8 +492,8 @@ class Http(val service: Service) {
 
     //----------------- WebSockets ------------------//
     // These behave in exactly the same way as the static WebSocket methods.
-    fun webSocket(path: String, handler: Class<*>) {
-        service.webSocket(path, handler)
+    fun webSocket(path: String, handler: KClass<*>) {
+        service.webSocket(path, handler.java)
     }
 
     fun webSocketIdleTimeoutMillis(timeout: Int) {

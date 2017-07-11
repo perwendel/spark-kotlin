@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
 
     val http: Http = ignite()
 
-    http.webSocket("/ws", SampleWebSocketHandler::class.java)
+    http.webSocket("/ws", SampleWebSocketHandler::class)
 
     http.staticFiles.location("/public")
 

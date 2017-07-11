@@ -22,7 +22,7 @@ import spark.kotlin.*
  * Example usage of spark-kotlin via STATIC API.
  */
 fun main(args: Array<String>) {
-    webSocket("/ws", SampleWebSocketHandler::class.java)
+    webSocket("/ws", SampleWebSocketHandler::class)
 
     staticFiles.location("/public")
 
