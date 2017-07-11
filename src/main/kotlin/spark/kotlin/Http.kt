@@ -242,7 +242,24 @@ fun internalServerError(function: RouteHandler.() -> Any) {
     }
 }
 
-//----------------- TODO: Web sockets -----------------//
+//----------------- Web sockets -----------------//
+
+/**
+ * Registers a WebSocket handler class under a given URL.
+ * @param url The URL to attach the WebSocket handler to.
+ * @param handler A class annotated with Jetty's WebSocket annotations.
+ */
+fun webSocket(url: String, handler: Class<*>) {
+    Spark.webSocket(url, handler)
+}
+
+/**
+ * Sets the idle timeout for WebSocket connections.
+ * @param timeout The amount of time, in milliseconds, that a connection can remain established for with no activity.
+ */
+fun webSocketIdleTimeoutMillis(timeout: Int) {
+    Spark.webSocketIdleTimeoutMillis(timeout)
+}
 
 //----------------- exception mapping -----------------//
 
@@ -472,6 +489,16 @@ class Http(val service: Service) {
     val staticFiles: Service.StaticFiles = service.staticFiles
     //----------------- Redirect -----------------//
     val redirect: Redirect = service.redirect
+
+    //----------------- WebSockets ------------------//
+    // These behave in exactly the same way as the static WebSocket methods.
+    fun webSocket(path: String, handler: Class<*>) {
+        service.webSocket(path, handler)
+    }
+
+    fun webSocketIdleTimeoutMillis(timeout: Int) {
+        service.webSocketIdleTimeoutMillis(timeout)
+    }
 
     /**
      * Gets the port
