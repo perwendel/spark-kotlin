@@ -16,6 +16,7 @@
 package spark.kotlin
 
 import spark.*
+
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
@@ -52,6 +53,13 @@ fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: Strin
  */
 fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean) {
     Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
+}
+
+/**
+ * Set the connection to be secure (HTTPS)
+ */
+fun secure() {
+    Spark.secure(null, null, null, null)
 }
 
 /**
@@ -503,6 +511,14 @@ class Http(val service: Service) {
         service.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
         return this
     }
+
+    /**
+     * Set the connection to be secure (HTTPS)
+     */
+     fun secure(): Http {
+        Spark.secure(null, null, null, null)
+        return this
+      }
 
     /**
      * Sets the ip address
