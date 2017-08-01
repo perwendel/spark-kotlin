@@ -15,16 +15,22 @@
  */
 package spark.kotlin
 
-import spark.*
+import spark.Filter
+import spark.HaltException
+import spark.ModelAndView
+import spark.Service
+import spark.Spark
+import spark.TemplateEngine
+import spark.TemplateViewRoute
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
-val DEFAULT_ACCEPT = "*/*"
+val DEFAULT_ACCEPT by lazy { "*/*" }
 
 //----------------- Static files -----------------//
-val staticFiles: Service.StaticFiles = Spark.staticFiles
+val staticFiles by lazy { Spark.staticFiles }
 //----------------- Redirect -----------------//
-val redirect: Redirect = Spark.redirect
+val redirect by lazy { Spark.redirect }
 
 /**
  * Gets the port
@@ -294,7 +300,7 @@ fun ignite(): Http {
  */
 class Http(val service: Service) {
 
-    val DEFAULT_ACCEPT = "*/*"
+    val DEFAULT_ACCEPT by lazy { "*/*" }
 
     /**
      * Map the route for HTTP GET requests
@@ -469,9 +475,9 @@ class Http(val service: Service) {
     }
 
     //----------------- Static files -----------------//
-    val staticFiles: Service.StaticFiles = service.staticFiles
+    val staticFiles by lazy { service.staticFiles }
     //----------------- Redirect -----------------//
-    val redirect: Redirect = service.redirect
+    val redirect by lazy { service.redirect }
 
     /**
      * Gets the port
