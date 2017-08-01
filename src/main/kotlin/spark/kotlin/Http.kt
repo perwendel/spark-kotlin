@@ -86,171 +86,109 @@ fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
  * @param accepts The accept type to listen to. Defaults to all accept types.
  * @param function The function that handles the request.
  */
-fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.get(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun get(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.get(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.get(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.get(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.post(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun post(path: String, accepts: String = DEFAULT_ACCEPT, route: (RouteHandler) -> Any) {
+    Spark.post(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.post(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.post(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.put(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun put(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.put(path, accepts, { req, res -> route })
 }
 
-fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.put(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.put(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.delete(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun delete(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.delete(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.delete(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.delete(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.head(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun head(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.head(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.head(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.head(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.trace(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun trace(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.trace(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.trace(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.trace(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.options(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun options(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.options(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.options(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.options(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.patch(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun patch(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.patch(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.patch(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.patch(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.connect(path, accepts) {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun connect(path: String, accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Any) {
+    Spark.connect(path, accepts, { req, res -> route(RouteHandler(req, res)) })
 }
 
-fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, function: RouteHandler.() -> ModelAndView) {
-    Spark.connect(path, accepts, TemplateViewRoute(fun(req, res): ModelAndView {
-        return function(RouteHandler(req, res))
-    }), templateEngine)
+fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: TemplateEngine, route: RouteHandler.() -> ModelAndView) {
+    Spark.connect(path, accepts, { req, res -> route(RouteHandler(req, res)) }, templateEngine)
 }
 
-fun before(filter: Filter, accepts: String = DEFAULT_ACCEPT) {
+fun before(filter: Filter) {
     Spark.before(filter)
 }
 
-fun before(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
-    val filter = Filter(fun(req, res) {
-        function(RouteHandler(req, res))
-    })
-    if (path == null) Spark.before(filter) else Spark.before(path, accepts, filter)
+fun before(path: String = "", accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Unit) {
+    val filter = Filter { req, res -> route(RouteHandler(req, res)) }
+    if (path.isBlank()) Spark.before(filter) else Spark.before(path, accepts, filter)
 }
 
-fun after(path: String? = null, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Unit) {
-    val filter = Filter(fun(req, res) {
-        function(RouteHandler(req, res))
-    })
-    if (path == null) Spark.after(filter) else Spark.after(path, accepts, filter)
+fun after(path: String = "", accepts: String = DEFAULT_ACCEPT, route: RouteHandler.() -> Unit) {
+    val filter = Filter { req, res -> route(RouteHandler(req, res)) }
+    if (path.isBlank()) Spark.after(filter) else Spark.after(path, accepts, filter)
 }
 
-fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
-    val filter = Filter(fun(req, res) {
-        function(RouteHandler(req, res))
-    })
-    if (path == null) Spark.afterAfter(filter) else Spark.afterAfter(path, filter)
+fun finally(path: String = "", route: RouteHandler.() -> Unit) {
+    val filter = Filter { req, res -> route(RouteHandler(req, res)) }
+    if (path.isBlank()) Spark.afterAfter(filter) else Spark.afterAfter(path, filter)
 }
 
 //----------------- Custom error pages -----------------//
-fun notFound(function: RouteHandler.() -> Any) {
-    Spark.notFound() {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun notFound(route: RouteHandler.() -> Any) {
+    Spark.notFound { req, res -> route(RouteHandler(req, res)) }
 }
 
-fun internalServerError(function: RouteHandler.() -> Any) {
-    Spark.internalServerError() {
-        req, res ->
-        function(RouteHandler(req, res))
-    }
+fun internalServerError(route: RouteHandler.() -> Any) {
+    Spark.internalServerError { req, res -> route(RouteHandler(req, res)) }
 }
-
-//----------------- TODO: Web sockets -----------------//
 
 //----------------- exception mapping -----------------//
-
-fun <T : Exception> exception(exceptionClass: KClass<T>, function: ExceptionHandler.() -> Unit) {
-    Spark.exception(exceptionClass.java, spark.ExceptionHandler(fun(e, req, res) {
-        function(ExceptionHandler(e, req, res))
-    }))
+fun <T : Exception> exception(exceptionClass: KClass<T>, handler: ExceptionHandler.() -> Unit) {
+    Spark.exception(exceptionClass.java, { error, req, res -> handler(ExceptionHandler(error, req, res)) })
 }
 
 //----------------- Halts -----------------//
@@ -382,7 +320,6 @@ class Http(val service: Service) {
         val filter = Filter { req, res -> route(RouteHandler(req, res)) }
         if (path.isBlank()) service.afterAfter(filter) else service.afterAfter(path, filter)
     }
-
 
     //----------------- Custom error pages -----------------//
     fun notFound(route: RouteHandler.() -> Any) {
