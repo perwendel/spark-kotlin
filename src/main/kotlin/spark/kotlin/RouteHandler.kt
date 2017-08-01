@@ -15,10 +15,8 @@
  */
 package spark.kotlin
 
-import spark.QueryParamsMap
 import spark.Request
 import spark.Response
-import spark.Session
 
 /**
  * Handles routes and makes Kotlin sugar possible.
@@ -33,199 +31,142 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets the request path parameter.
      */
-    fun params(name: String): String {
-        return request.params(name)
-    }
+    inline fun params(name: String) = request.params(name)
 
     /**
      * Gets all request path parameters.
      */
-    fun params(): MutableMap<String, String>? {
-        return request.params();
-    }
+    inline fun params() = request.params()
 
     /**
      * Gets the request splat (wildcard) parameters.
      */
-    fun splat(): Array<out String>? {
-        return request.splat()
-    }
+    inline fun splat() = request.splat()
 
     /**
      * Gets the request content type.
      */
-    fun contentType(): String {
-        return request.contentType()
-    }
+    inline fun contentType() = request.contentType()
 
     /**
      * Gets the request query param.
      */
-    fun queryParams(key: String): String {
-        return request.queryParams(key)
-    }
+    inline fun queryParams(key: String) = request.queryParams(key)
 
     /**
      * Gets the request queryMap.
      */
-    fun queryMap(): QueryParamsMap {
-        return request.queryMap()
-    }
+    inline fun queryMap() = request.queryMap()
 
     /**
      * Gets the request queryMap for key.
      */
-    fun queryMap(key: String): QueryParamsMap {
-        return request.queryMap(key)
-    }
+    inline fun queryMap(key: String) = request.queryMap(key)
 
     /**
      * Gets request attribute.
      */
-    fun attribute(key: String): String {
-        return request.attribute(key);
-    }
+    inline fun attribute(key: String): String = request.attribute(key)
 
     /**
      * Sets request attribute.
      */
-    fun attribute(key: String, value: String) {
-        request.attribute(key, value);
-    }
+    inline fun attribute(key: String, value: String) = request.attribute(key, value)
 
     /**
      * Gets the request attributes.
      */
-    fun attributes(): MutableSet<String>? {
-        return request.attributes();
-    }
+    inline fun attributes() = request.attributes();
 
     /**
      * Gets the request session, if no exists one is created.
      */
-    fun session(): Session {
-        return request.session()
-    }
+    inline fun session() = request.session()
 
     /**
      * Gets the request session, if no exists one is created if create is true.
      */
-    fun session(create: Boolean): Session? {
-        return request.session(create)
-    }
+    inline fun session(create: Boolean) = request.session(create)
 
     /**
      * Gets the request uri.
      */
-    fun uri(): String {
-        return request.uri()
-    }
+    inline fun uri() = request.uri()
 
     /**
      * Gets request protocol.
      */
-    fun protocol(): String {
-        return request.protocol()
-    }
+    inline fun protocol() = request.protocol()
 
     /**
      * Gets request scheme.
      */
-    fun scheme(): String {
-        return request.scheme()
-    }
+    inline fun scheme() = request.scheme()
 
     /**
      * Gets the request host name (from HTTP request header "host")
      */
-    fun host(): String {
-        return request.host()
-    }
+    inline fun host() = request.host()
 
     /**
      * Gets the server port
      */
-    fun port(): Int {
-        return request.port()
-    }
+    inline fun port() = request.port()
 
     /**
      * Gets request path info.
      */
-    fun pathInfo(): String {
-        return request.pathInfo()
-    }
+    inline fun pathInfo() = request.pathInfo()
 
     /**
      * Gets request servlet path.
      */
-    fun servletPath(): String {
-        return request.servletPath()
-    }
+    inline fun servletPath() = request.servletPath()
 
     /**
      * Gets request context path.
      */
-    fun contextPath(): String {
-        return request.contextPath()
-    }
+    inline fun contextPath() = request.contextPath()
 
     /**
      * Gets request user agent.
      */
-    fun userAgent(): String {
-        return request.userAgent()
-    }
+    inline fun userAgent() = request.userAgent()
 
     /**
      * Gets request method.
      */
-    fun requestMethod(): String {
-        return request.requestMethod()
-    }
-
+    inline fun requestMethod() = request.requestMethod()
 
     // Implicit access of Response functions
 
     /**
      * Gets the response status code.
      */
-    fun status(): Int {
-        return response.status()
-    }
+    inline fun status() = response.status()
 
     /**
      * Sets the response status code.
      */
-    fun status(code: Int) {
-        response.status(code)
-    }
+    inline fun status(code: Int) = response.status(code)
 
     /**
      * Gets the response content type.
      */
-    fun type(): String {
-        return response.type()
-    }
+    inline fun type() = response.type()
 
     /**
      * Sets the response content type.
      */
-    fun type(contentType: String) {
-        response.type(contentType)
-    }
+    inline fun type(contentType: String) = response.type(contentType)
 
     /**
      * Redirects to location.
      */
-    fun redirect(location: String) {
-        response.redirect(location)
-    }
+    inline fun redirect(location: String) = response.redirect(location)
 
     /**
      * Redirects to location with statusCode.
      */
-    fun redirect(location: String, statusCode: Int) {
-        response.redirect(location, statusCode)
-    }
+    inline fun redirect(location: String, statusCode: Int) = response.redirect(location, statusCode)
 }
