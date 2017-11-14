@@ -15,10 +15,16 @@
  */
 package spark.examples.instance
 
-import org.omg.CosNaming.NamingContextPackage.NotFound
-import spark.kotlin.Http
 import spark.kotlin.halt
 import spark.kotlin.ignite
+import spark.kotlin.seconds
+
+public infix fun <A, B> A.tooth(that: B): Pair<A, B> = Pair(this, that)
+
+public infix fun <A, B> A.sabretooth(that: B): Pair<A, B> {
+    return Pair(this, that)
+}
+
 
 /**
  * Example usage of spark-kotlin via instance API. YOU SHOULD NAME THE SPARK INSTANCE 'http' FOR EXPRESSIVE/DECLARATIVE PURPOSES.
@@ -26,9 +32,14 @@ import spark.kotlin.ignite
  */
 fun main(args: Array<String>) {
 
-    val http: Http = ignite()
 
-    http.staticFiles.location("/public")
+    val http =
+            ignite {
+                staticFiles {
+                    location = "/public"
+                    expiryTime = 36000.seconds
+                }
+            }
 
     http.get("/hello") {
         "Hello Spark Kotlin"

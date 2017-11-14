@@ -16,6 +16,7 @@
 package spark.kotlin
 
 import spark.*
+import spark.Service.SPARK_DEFAULT_PORT
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
@@ -86,8 +87,7 @@ fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
  * @param function The function that handles the request.
  */
 fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.get(path, accepts) {
-        req, res ->
+    Spark.get(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -99,8 +99,7 @@ fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.post(path, accepts) {
-        req, res ->
+    Spark.post(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -112,8 +111,7 @@ fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.put(path, accepts) {
-        req, res ->
+    Spark.put(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -125,8 +123,7 @@ fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.delete(path, accepts) {
-        req, res ->
+    Spark.delete(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -138,8 +135,7 @@ fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templ
 }
 
 fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.head(path, accepts) {
-        req, res ->
+    Spark.head(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -151,8 +147,7 @@ fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.trace(path, accepts) {
-        req, res ->
+    Spark.trace(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -164,8 +159,7 @@ fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.options(path, accepts) {
-        req, res ->
+    Spark.options(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -177,8 +171,7 @@ fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Temp
 }
 
 fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.patch(path, accepts) {
-        req, res ->
+    Spark.patch(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -190,8 +183,7 @@ fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.connect(path, accepts) {
-        req, res ->
+    Spark.connect(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -229,15 +221,13 @@ fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
 
 //----------------- Custom error pages -----------------//
 fun notFound(function: RouteHandler.() -> Any) {
-    Spark.notFound() {
-        req, res ->
+    Spark.notFound() { req, res ->
         function(RouteHandler(req, res))
     }
 }
 
 fun internalServerError(function: RouteHandler.() -> Any) {
-    Spark.internalServerError() {
-        req, res ->
+    Spark.internalServerError() { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -287,6 +277,61 @@ fun ignite(): Http {
 }
 
 /**
+ * Ignites a Spark (HTTP) instance with the possibility to configure using a simple ignitition DSL:
+ *
+ * val http = ignite {
+ *
+ * }
+ */
+fun ignite(function: InitParams.() -> Unit): Http {
+
+    val wrapper = InitParams(SPARK_DEFAULT_PORT, "0.0.0.0", ThreadPool(), Secure(), StaticFiles())
+    function(wrapper)
+
+    val pool = wrapper.pool
+    val secure = wrapper.secure
+    val static = wrapper.static
+
+    println("wrapper: " + wrapper)
+
+    val service = Service.ignite()
+            .port(wrapper.port)
+            .ipAddress(wrapper.ipAddress)
+            .threadPool(pool.maxThreads, pool.minThreads, pool.idleTimeoutMillis)
+
+    if (secure.keystore.file != NIL) {
+        service.secure(secure.keystore.file, secure.keystore.password, secure.truststore.file, secure.truststore.password)
+    }
+
+    if (static.location != NIL) {
+        service.staticFiles.location(static.location)
+    }
+
+    if (static.externalLocation != NIL) {
+        service.staticFiles.externalLocation(static.externalLocation)
+    }
+
+    if (static.expiryTime.inSeconds > 0) {
+        service.staticFiles.expireTime(static.expiryTime.inSeconds)
+    }
+
+    if (static.headers.isNotEmpty()) {
+        service.staticFiles.headers(static.headers)
+    }
+
+    for (header in static.headers) {
+        service.staticFiles.header(header.key, header.value)
+    }
+
+    // TODO: Is mimeTypes relevant here?
+    for (type in static.mimeTypes) {
+        service.staticFiles.registerMimeType(type.key, type.value)
+    }
+
+    return Http(service)
+}
+
+/**
  * The route class that takes a Spark service and wraps the route methods to enable fancy syntax
  * with access to request and response parameters in the route code.
  *
@@ -304,8 +349,7 @@ class Http(val service: Service) {
      * @param function The function that handles the request.
      */
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.get(path, accepts) {
-            req, res ->
+        service.get(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -317,8 +361,7 @@ class Http(val service: Service) {
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.post(path, accepts) {
-            req, res ->
+        service.post(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -330,8 +373,7 @@ class Http(val service: Service) {
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.put(path, accepts) {
-            req, res ->
+        service.put(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -343,8 +385,7 @@ class Http(val service: Service) {
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.delete(path, accepts) {
-            req, res ->
+        service.delete(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -356,8 +397,7 @@ class Http(val service: Service) {
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.head(path, accepts) {
-            req, res ->
+        service.head(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -369,8 +409,7 @@ class Http(val service: Service) {
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.trace(path, accepts) {
-            req, res ->
+        service.trace(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -382,8 +421,7 @@ class Http(val service: Service) {
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.options(path, accepts) {
-            req, res ->
+        service.options(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -395,8 +433,7 @@ class Http(val service: Service) {
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.patch(path, accepts) {
-            req, res ->
+        service.patch(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -408,8 +445,7 @@ class Http(val service: Service) {
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.connect(path, accepts) {
-            req, res ->
+        service.connect(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -448,15 +484,13 @@ class Http(val service: Service) {
 
     //----------------- Custom error pages -----------------//
     fun notFound(function: RouteHandler.() -> Any) {
-        service.notFound() {
-            req, res ->
+        service.notFound() { req, res ->
             function(RouteHandler(req, res))
         }
     }
 
     fun internalServerError(function: RouteHandler.() -> Any) {
-        service.internalServerError() {
-            req, res ->
+        service.internalServerError() { req, res ->
             function(RouteHandler(req, res))
         }
     }

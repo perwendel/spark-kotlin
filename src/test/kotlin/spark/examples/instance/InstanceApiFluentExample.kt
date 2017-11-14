@@ -2,7 +2,7 @@ package spark.examples.instance
 
 import spark.kotlin.Http
 import spark.examples.testutil.keyStoreLocation
-import spark.examples.testutil.keystorePassword
+import spark.examples.testutil.keystorePass
 import spark.examples.testutil.trustStoreLocation
 import spark.examples.testutil.trustStorePassword
 import spark.kotlin.ignite
@@ -16,7 +16,7 @@ fun main(args: Array<String>) {
             .port(5656)
             .threadPool(10)
             .secure(keyStoreLocation(),
-                    keystorePassword(),
+                    keystorePass(),
                     trustStoreLocation(),
                     trustStorePassword())
 

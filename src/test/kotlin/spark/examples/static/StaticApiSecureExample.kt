@@ -16,7 +16,7 @@
 package spark.examples.static
 
 import spark.examples.testutil.keyStoreLocation
-import spark.examples.testutil.keystorePassword
+import spark.examples.testutil.keystorePass
 import spark.examples.testutil.trustStoreLocation
 import spark.examples.testutil.trustStorePassword
 import spark.kotlin.get
@@ -32,7 +32,7 @@ fun main(args: Array<String>) {
     port(4321)
     secure(
             keyStoreLocation(),
-            keystorePassword(),
+            keystorePass(),
             trustStoreLocation(),
             trustStorePassword())
 
