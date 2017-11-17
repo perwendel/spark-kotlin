@@ -19,22 +19,28 @@ import spark.examples.testutil.keyStoreLocation
 import spark.examples.testutil.keystorePass
 import spark.examples.testutil.trustStoreLocation
 import spark.examples.testutil.trustStorePassword
+import spark.kotlin.config
 import spark.kotlin.get
 import spark.kotlin.notFound
-import spark.kotlin.port
-import spark.kotlin.secure
 
 /**
  * Example usage of spark-kotlin via STATIC API.
  */
 fun main(args: Array<String>) {
 
-    port(4321)
-    secure(
-            keyStoreLocation(),
-            keystorePass(),
-            trustStoreLocation(),
-            trustStorePassword())
+    config {
+        port = 4321
+        secure {
+            keystore {
+                file = keyStoreLocation()
+                password = keystorePass()
+            }
+            truststore {
+                file = trustStoreLocation()
+                password = trustStorePassword()
+            }
+        }
+    }
 
     // when accessing don't forget https
     get("/hello") {

@@ -25,7 +25,10 @@ data class InitParams(
 
 }
 
-data class StaticFiles(var location: String = NIL, var externalLocation: String = NIL, var expiryTime: Seconds = Seconds(-1)) {
+data class StaticFiles(
+        var location: String = NIL,
+        var externalLocation: String = NIL,
+        var expiryTime: Seconds = Seconds(-1)) {
 
     var headers: Map<String, String> = mutableMapOf()
     var mimeTypes: Map<String, String> = mutableMapOf()
@@ -43,7 +46,8 @@ data class StaticFiles(var location: String = NIL, var externalLocation: String 
 data class ThreadPool(var maxThreads: Int = -1, var minThreads: Int = -1, var idleTimeoutMillis: Int = -1)
 
 data class Secure(var keystore: Store = Store(),
-                  var truststore: Store = Store()) {
+                  var truststore: Store = Store(),
+                  var needsClientCert: Boolean = false) {
 
     fun keystore(function: Store.() -> Unit) {
         function(keystore)

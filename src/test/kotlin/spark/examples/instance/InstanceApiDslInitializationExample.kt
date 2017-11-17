@@ -33,6 +33,7 @@ fun main(args: Array<String>) {
                 file = trustStoreLocation()
                 password = trustStorePassword()
             }
+            needsClientCert = false
         }
 
         staticFiles {
@@ -40,10 +41,9 @@ fun main(args: Array<String>) {
             expiryTime = 36000.seconds
 
             headers(
-                    "description" to "high definition audio",
+                    "description" to "static content",
                     "licence" to "free to use"
             )
-
             mimeTypes(
                     "cxt" to "text/html"
             )
@@ -83,14 +83,17 @@ fun main(args: Array<String>) {
         println("At last")
     }
 
-    http.redirect.any("/to", "/hello")
-
-    http.get("/exception") {
-        throw NotFoundException("You are lost my friend")
+    http.redirect {
+        any("/from" to "/hello")
     }
 
-    http.exception(NotFoundException::class) {
-        status(404)
+    http.get("/exception") {
+        throw AuthException("You are lost my friend")
+    }
+
+    http.exception(AuthException::class) {
+        status(401)
         response.body(exception.message)
     }
 }
+
