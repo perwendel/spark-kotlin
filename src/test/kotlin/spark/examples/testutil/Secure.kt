@@ -4,7 +4,7 @@ fun keyStoreLocation(): String {
     return "./src/test/resources/keystore.jks"
 }
 
-fun keystorePassword(): String {
+fun keystorePass(): String {
     return "password"
 }
 
@@ -13,5 +13,5 @@ fun trustStoreLocation(): String {
 }
 
 fun trustStorePassword(): String {
-    return keystorePassword()
+    return keystorePass()
 }

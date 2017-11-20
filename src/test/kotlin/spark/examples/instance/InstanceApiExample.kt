@@ -15,20 +15,24 @@
  */
 package spark.examples.instance
 
-import org.omg.CosNaming.NamingContextPackage.NotFound
-import spark.kotlin.Http
 import spark.kotlin.halt
 import spark.kotlin.ignite
+import spark.kotlin.seconds
 
 /**
  * Example usage of spark-kotlin via instance API. YOU SHOULD NAME THE SPARK INSTANCE 'http' FOR EXPRESSIVE/DECLARATIVE PURPOSES.
- * If you don't it's blasphemy.
+ * Not complying to this will be judged as blasphemy and you will suffer horrible consequences ???AX>//TODO.
  */
 fun main(args: Array<String>) {
 
-    val http: Http = ignite()
 
-    http.staticFiles.location("/public")
+    val http =
+            ignite {
+                staticFiles {
+                    location = "/public"
+                    expiryTime = 36000.seconds
+                }
+            }
 
     http.get("/hello") {
         "Hello Spark Kotlin"
@@ -63,16 +67,22 @@ fun main(args: Array<String>) {
         println("At last")
     }
 
-    http.redirect.any("/to", "/hello")
-
-    http.get("/exception") {
-        throw NotFoundException("You are lost my friend")
+    http.redirect {
+        any("/from" to "/hello")
     }
 
-    http.exception(NotFoundException::class) {
-        status(404)
+    http.notFound {
+        "Custom 404"
+    }
+
+    http.get("/exception") {
+        throw AuthException("You are not welcome here")
+    }
+
+    http.exception(AuthException::class) {
+        status(401)
         response.body(exception.message)
     }
 }
 
-class NotFoundException(message: String) : Exception(message)
+class AuthException(message: String) : Exception(message)

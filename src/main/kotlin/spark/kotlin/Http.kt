@@ -16,62 +16,110 @@
 package spark.kotlin
 
 import spark.*
+import spark.Service.SPARK_DEFAULT_PORT
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
 val DEFAULT_ACCEPT = "*/*"
 
-//----------------- Static files -----------------//
-val staticFiles: Service.StaticFiles = Spark.staticFiles
-//----------------- Redirect -----------------//
-val redirect: Redirect = Spark.redirect
+// TODO: this is a prototype
+fun config(function: InitParams.() -> Unit) {
 
-/**
- * Gets the port
- */
-fun port(): Int {
-    return Spark.port()
+    val wrapper = InitParams(SPARK_DEFAULT_PORT, "0.0.0.0", ThreadPool(), Secure(), StaticFiles())
+    function(wrapper)
+
+    val staticFiles = Spark.staticFiles
+
+    val pool = wrapper.pool
+    val secure = wrapper.secure
+    val static = wrapper.static
+
+    port(wrapper.port)
+    ipAddress(wrapper.ipAddress)
+    threadPool(pool.maxThreads, pool.minThreads, pool.idleTimeoutMillis)
+
+    if (secure.keystore.file != NIL) {
+        secure(
+                secure.keystore.file,
+                secure.keystore.password,
+                secure.truststore.file,
+                secure.truststore.password,
+                secure.needsClientCert)
+    }
+
+    if (static.location != NIL) {
+        staticFiles.location(static.location)
+    }
+
+    if (static.externalLocation != NIL) {
+        staticFiles.externalLocation(static.externalLocation)
+    }
+
+    if (static.expiryTime.inSeconds > 0) {
+        staticFiles.expireTime(static.expiryTime.inSeconds)
+    }
+
+    if (static.headers.isNotEmpty()) {
+        staticFiles.headers(static.headers)
+    }
+
+    for (header in static.headers) {
+        staticFiles.header(header.key, header.value)
+    }
+
+    for (type in static.mimeTypes) {
+        staticFiles.registerMimeType(type.key, type.value)
+    }
+
+}
+
+private var redirects = Redirects()
+
+fun redirect(function: Redirects.() -> Unit) {
+    function(redirects)
+
+    redirects applyOn Spark.redirect
 }
 
 /**
  * Sets the port. 0 then an arbitrary available port will be used
  */
-fun port(number: Int) {
+private fun port(number: Int) {
     Spark.port(number)
 }
 
 /**
  * Set the connection to be secure (HTTPS)
  */
-fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String) {
+private fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String) {
     Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword)
 }
 
 /**
  * Set the connection to be secure (HTTPS)
  */
-fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean) {
+private fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean) {
     Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
 }
 
 /**
  * Sets the ip address
  */
-fun ipAddress(ipAddress: String) {
+private fun ipAddress(ipAddress: String) {
     Spark.ipAddress(ipAddress)
 }
 
 /**
  * Sets the embedded server's thread pool max size.
  */
-fun threadPool(maxSize: Int) {
+private fun threadPool(maxSize: Int) {
     Spark.threadPool(maxSize)
 }
 
 /**
  * Sets the embedded server's thread pool max size, minSize and idle timeout (ms)
  */
-fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
+private fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
     Spark.threadPool(maxSize, minSize, idleTimeoutMillis)
 }
 
@@ -86,8 +134,7 @@ fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
  * @param function The function that handles the request.
  */
 fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.get(path, accepts) {
-        req, res ->
+    Spark.get(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -99,8 +146,7 @@ fun get(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.post(path, accepts) {
-        req, res ->
+    Spark.post(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -112,8 +158,7 @@ fun post(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.put(path, accepts) {
-        req, res ->
+    Spark.put(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -125,8 +170,7 @@ fun put(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Template
 }
 
 fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.delete(path, accepts) {
-        req, res ->
+    Spark.delete(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -138,8 +182,7 @@ fun delete(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templ
 }
 
 fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.head(path, accepts) {
-        req, res ->
+    Spark.head(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -151,8 +194,7 @@ fun head(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templat
 }
 
 fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.trace(path, accepts) {
-        req, res ->
+    Spark.trace(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -164,8 +206,7 @@ fun trace(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.options(path, accepts) {
-        req, res ->
+    Spark.options(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -177,8 +218,7 @@ fun options(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Temp
 }
 
 fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.patch(path, accepts) {
-        req, res ->
+    Spark.patch(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -190,8 +230,7 @@ fun patch(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Templa
 }
 
 fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-    Spark.connect(path, accepts) {
-        req, res ->
+    Spark.connect(path, accepts) { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -229,15 +268,13 @@ fun finally(path: String? = null, function: RouteHandler.() -> Unit) {
 
 //----------------- Custom error pages -----------------//
 fun notFound(function: RouteHandler.() -> Any) {
-    Spark.notFound() {
-        req, res ->
+    Spark.notFound() { req, res ->
         function(RouteHandler(req, res))
     }
 }
 
 fun internalServerError(function: RouteHandler.() -> Any) {
-    Spark.internalServerError() {
-        req, res ->
+    Spark.internalServerError() { req, res ->
         function(RouteHandler(req, res))
     }
 }
@@ -287,6 +324,65 @@ fun ignite(): Http {
 }
 
 /**
+ * Ignites a Spark (HTTP) instance with the possibility to configure using a simple ignitition DSL:
+ *
+ * val http = ignite {
+ *
+ * }
+ */
+fun ignite(function: InitParams.() -> Unit): Http {
+
+    val wrapper = InitParams(SPARK_DEFAULT_PORT, "0.0.0.0", ThreadPool(), Secure(), StaticFiles())
+    function(wrapper)
+
+    val pool = wrapper.pool
+    val secure = wrapper.secure
+    val static = wrapper.static
+
+    println("wrapper: " + wrapper)
+
+    val http = Service.ignite()
+            .port(wrapper.port)
+            .ipAddress(wrapper.ipAddress)
+            .threadPool(pool.maxThreads, pool.minThreads, pool.idleTimeoutMillis)
+
+    if (secure.keystore.file != NIL) {
+        http.secure(
+                secure.keystore.file,
+                secure.keystore.password,
+                secure.truststore.file,
+                secure.truststore.password,
+                secure.needsClientCert)
+    }
+
+    if (static.location != NIL) {
+        http.staticFiles.location(static.location)
+    }
+
+    if (static.externalLocation != NIL) {
+        http.staticFiles.externalLocation(static.externalLocation)
+    }
+
+    if (static.expiryTime.inSeconds > 0) {
+        http.staticFiles.expireTime(static.expiryTime.inSeconds)
+    }
+
+    if (static.headers.isNotEmpty()) {
+        http.staticFiles.headers(static.headers)
+    }
+
+    for (header in static.headers) {
+        http.staticFiles.header(header.key, header.value)
+    }
+
+    for (type in static.mimeTypes) {
+        http.staticFiles.registerMimeType(type.key, type.value)
+    }
+
+    return Http(http)
+}
+
+/**
  * The route class that takes a Spark service and wraps the route methods to enable fancy syntax
  * with access to request and response parameters in the route code.
  *
@@ -296,6 +392,14 @@ class Http(val service: Service) {
 
     val DEFAULT_ACCEPT = "*/*"
 
+    private var redirects = Redirects()
+
+    fun redirect(function: Redirects.() -> Unit) {
+        function(redirects)
+
+        redirects applyOn service.redirect
+    }
+
     /**
      * Map the route for HTTP GET requests
      *
@@ -304,8 +408,7 @@ class Http(val service: Service) {
      * @param function The function that handles the request.
      */
     fun get(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.get(path, accepts) {
-            req, res ->
+        service.get(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -317,8 +420,7 @@ class Http(val service: Service) {
     }
 
     fun post(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.post(path, accepts) {
-            req, res ->
+        service.post(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -330,8 +432,7 @@ class Http(val service: Service) {
     }
 
     fun put(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.put(path, accepts) {
-            req, res ->
+        service.put(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -343,8 +444,7 @@ class Http(val service: Service) {
     }
 
     fun delete(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.delete(path, accepts) {
-            req, res ->
+        service.delete(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -356,8 +456,7 @@ class Http(val service: Service) {
     }
 
     fun head(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.head(path, accepts) {
-            req, res ->
+        service.head(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -369,8 +468,7 @@ class Http(val service: Service) {
     }
 
     fun trace(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.trace(path, accepts) {
-            req, res ->
+        service.trace(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -382,8 +480,7 @@ class Http(val service: Service) {
     }
 
     fun options(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.options(path, accepts) {
-            req, res ->
+        service.options(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -395,8 +492,7 @@ class Http(val service: Service) {
     }
 
     fun patch(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.patch(path, accepts) {
-            req, res ->
+        service.patch(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -408,8 +504,7 @@ class Http(val service: Service) {
     }
 
     fun connect(path: String, accepts: String = DEFAULT_ACCEPT, function: RouteHandler.() -> Any) {
-        service.connect(path, accepts) {
-            req, res ->
+        service.connect(path, accepts) { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -448,15 +543,13 @@ class Http(val service: Service) {
 
     //----------------- Custom error pages -----------------//
     fun notFound(function: RouteHandler.() -> Any) {
-        service.notFound() {
-            req, res ->
+        service.notFound() { req, res ->
             function(RouteHandler(req, res))
         }
     }
 
     fun internalServerError(function: RouteHandler.() -> Any) {
-        service.internalServerError() {
-            req, res ->
+        service.internalServerError() { req, res ->
             function(RouteHandler(req, res))
         }
     }
@@ -468,10 +561,7 @@ class Http(val service: Service) {
         }))
     }
 
-    //----------------- Static files -----------------//
-    val staticFiles: Service.StaticFiles = service.staticFiles
-    //----------------- Redirect -----------------//
-    val redirect: Redirect = service.redirect
+    // TODO: Remove ALL FLUENT AND OTHER
 
     /**
      * Gets the port
