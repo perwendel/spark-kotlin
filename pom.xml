@@ -8,7 +8,7 @@
     </parent>
     <groupId>com.sparkjava</groupId>
     <artifactId>spark-kotlin</artifactId>
-    <version>1.0.0-alpha</version>
+    <version>1.0.1-alpha</version>
     <name>Spark</name>
     <description>A Spark DSL in idiomatic Kotlin</description>
     <url>http://www.sparkjava.com</url>

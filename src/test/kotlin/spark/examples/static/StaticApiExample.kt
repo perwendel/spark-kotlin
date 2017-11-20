@@ -15,6 +15,7 @@
  */
 package spark.examples.static
 
+import spark.examples.instance.AuthException
 import spark.kotlin.*
 
 /**
@@ -22,7 +23,13 @@ import spark.kotlin.*
  */
 fun main(args: Array<String>) {
 
-    staticFiles.location("/public")
+    config {
+        port = 1234
+        staticFiles {
+            location = "/public"
+            expiryTime = 3600.seconds
+        }
+    }
 
     get("/hello") {
         "Hello Static Spark Kotlin"
@@ -57,6 +64,21 @@ fun main(args: Array<String>) {
         println("At last")
     }
 
-    redirect.any("/to", "/hello")
+    notFound {
+        "Nothing here"
+    }
+
+    get("/exception") {
+        throw AuthException("static protection")
+    }
+
+    exception(AuthException::class) {
+        status(401)
+        response.body(exception.message)
+    }
+
+    redirect {
+        any("/from" to "/hello")
+    }
 
 }
