@@ -4,6 +4,7 @@ out/
 target
 .idea
 *.iml
+classes/
 
 # Ignore Gradle GUI config
 gradle-app.setting
