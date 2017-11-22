@@ -35,6 +35,42 @@ get("/hello") {
     "Hello Spark Kotlin"
 }
 
+get("/doc") {
+    // available (same in instance API)
+    params()
+    params("<path-param-name>")
+    splat()
+    status()
+    status(404)
+    queryParams("<key>")
+    queryMap()
+    queryMap("<key>")
+    attribute("<key>")
+    attribute("<key>", "<value>")
+    attributes()
+    session()
+    session(create = true)
+    contentType()
+    uri()
+    protocol()
+    scheme()
+    host()
+    port()
+    pathInfo()
+    servletPath()
+    contextPath()
+    userAgent()
+    requestMethod()
+    type()
+    type(contentType = "application/json")
+    redirect(location = "/to")
+    redirect(location = "/to", statusCode = 302)
+    
+    // has all above and some more
+    request 
+    response
+}
+
 get("/nothing") {
     status(404)
     "Oops, we couldn't find what you're looking for"
