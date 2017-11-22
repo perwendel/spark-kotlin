@@ -23,24 +23,37 @@ import spark.Spark
  */
 fun main(args: Array<String>) {
 
-
     webSocket("/echo") {
-        connected {
-            println("[DSL] connected = " + session)
+        opened {
+            println("[DSL] opened = " + session)
 
             println(session.protocolVersion)
             println(session.remoteAddress)
+            println(session.idleTimeout)
+
+            session.idleTimeout = 40000
+
+            println("remote: " + session.remote)
+            println("timeout: " + session.idleTimeout)
+            println("isOpen: " + session.isOpen)
+
 
         }
-        message {
-            println("[DSLd] message = " + message + ", session = " + session)
+        messaged {
+            println("[DSL] message = " + message + ", session = " + session)
         }
         closed {
             println("[DSL] closed")
+            println("Secure: " + session.isSecure)
             println("[DSL] code = " + code + ", reason = " + reason + ", session = " + session)
+            try {
+                println("remote: " + session.remote)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            println("[2] isOpen: " + session.isOpen)
         }
     }
-
 
     Spark.init()
 
@@ -76,12 +89,12 @@ class WebSocket {
     var connectedFunction: Connected.() -> Unit = {}
     var errorFunction: Error.() -> Unit = {}
 
-    fun message(function: Message.() -> Unit) {
+    fun messaged(function: Message.() -> Unit) {
         messageFunction = function
         println("messageFunction: " + messageFunction)
     }
 
-    fun connected(function: Connected.() -> Unit) {
+    fun opened(function: Connected.() -> Unit) {
         connectedFunction = function
         println("connectedFunction: " + connectedFunction)
     }

@@ -14,7 +14,7 @@ class WebSocketHandler(val webSocket: spark.kotlin.websocket.WebSocket) {
 
     @OnWebSocketConnect
     fun connected(session: Session) {
-        println("[WebSocketHandler] on connected")
+        println("[WebSocketHandler] on opened")
         webSocket.connectedFunction(Connected(WebSocketSession(session)))
     }
 

@@ -14,7 +14,7 @@ fun testWebSocketConversation() {
 
     thread(start = true) {
 
-        Thread.sleep(500)
+        Thread.sleep(1000)
 
         val uri = "ws://localhost:4567/echo"
         val client = WebSocketClient()
@@ -23,7 +23,7 @@ fun testWebSocketConversation() {
         try {
             client.start()
             client.connect(ws, URI.create(uri), ClientUpgradeRequest())
-            ws.awaitClose(30, TimeUnit.SECONDS)
+            ws.awaitClose(5, TimeUnit.SECONDS)
         } finally {
             client.stop()
         }
