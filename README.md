@@ -82,12 +82,12 @@ config {
     }
     secure {
         keystore {
-            file = keyStoreLocation()
-            password = keystorePass()
+            file = "/etc/secure/keystore"
+            password = "hardtocrack"
         }
         truststore {
-            file = trustStoreLocation()
-            password = trustStorePassword()
+            file = "/etc/secure/truststore"
+            password = "otherdifficultpassword"
         }
         needsClientCert = false
     }
