@@ -33,7 +33,7 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets the request path parameter.
      */
-    fun params(name: String): String {
+    fun params(name: String): String? {
         return request.params(name)
     }
 
@@ -41,7 +41,7 @@ open class RouteHandler(val request: Request, val response: Response) {
      * Gets all request path parameters.
      */
     fun params(): MutableMap<String, String>? {
-        return request.params();
+        return request.params()
     }
 
     /**
@@ -54,14 +54,14 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets the request content type.
      */
-    fun contentType(): String {
+    fun contentType(): String? {
         return request.contentType()
     }
 
     /**
      * Gets the request query param.
      */
-    fun queryParams(key: String): String {
+    fun queryParams(key: String): String? {
         return request.queryParams(key)
     }
 
@@ -83,21 +83,21 @@ open class RouteHandler(val request: Request, val response: Response) {
      * Gets request attribute.
      */
     fun attribute(key: String): String {
-        return request.attribute(key);
+        return request.attribute(key)
     }
 
     /**
      * Sets request attribute.
      */
     fun attribute(key: String, value: String) {
-        request.attribute(key, value);
+        request.attribute(key, value)
     }
 
     /**
      * Gets the request attributes.
      */
     fun attributes(): MutableSet<String>? {
-        return request.attributes();
+        return request.attributes()
     }
 
     /**
@@ -138,7 +138,7 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets the request host name (from HTTP request header "host")
      */
-    fun host(): String {
+    fun host(): String? {
         return request.host()
     }
 
@@ -152,7 +152,7 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets request path info.
      */
-    fun pathInfo(): String {
+    fun pathInfo(): String? {
         return request.pathInfo()
     }
 
@@ -173,7 +173,7 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets request user agent.
      */
-    fun userAgent(): String {
+    fun userAgent(): String? {
         return request.userAgent()
     }
 
@@ -204,7 +204,7 @@ open class RouteHandler(val request: Request, val response: Response) {
     /**
      * Gets the response content type.
      */
-    fun type(): String {
+    fun type(): String? {
         return response.type()
     }
 

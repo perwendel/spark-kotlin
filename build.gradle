@@ -2,7 +2,7 @@ group 'com.sparkjava'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.2-2'
+    ext.kotlin_version = '1.2.31'
 
     repositories {
         mavenCentral()
@@ -12,6 +12,7 @@ buildscript {
     }
 }
 
+apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
 repositories {
@@ -19,6 +20,6 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "com.sparkjava:spark-core:2.6.0"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    api "com.sparkjava:spark-core:2.6.0"
 }
