@@ -1,5 +1,8 @@
 package spark.kotlin
 
+// TODO: NEW TODO : TODO
+// kotlin domain objects for Request and Response. Perhaps others Session etc?
+
 // error <- word in websocket
 // REQUEST/RESPONSE wrapping (ie kotlin specific types)
 // Path-params // HOW TO HANDLE NULL?

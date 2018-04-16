@@ -567,6 +567,13 @@ class Http(private val service: Service) {
     }
 
     /**
+     * Wait for server to start
+     */
+    fun awaitInit() {
+        service.awaitInitialization()
+    }
+
+    /**
      * Stops the Spark server and clears all routes
      */
     fun stop() {
