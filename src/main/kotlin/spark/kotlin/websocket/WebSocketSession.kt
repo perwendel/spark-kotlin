@@ -9,6 +9,13 @@ import org.eclipse.jetty.websocket.api.Session
  */
 class WebSocketSession(val session: Session) {
 
+    // Extra DSL BEGIN
+    fun send(message: String) {
+        session!!.remote.sendString(message)
+    }
+
+    // END
+
     val remote: RemoteEndpoint
         get() {
             try {
@@ -31,9 +38,6 @@ class WebSocketSession(val session: Session) {
             println("session.isOpen = ${session.isOpen}")
             return session.isOpen
         }
-
-    // TODO: Fix if closed stuff
-    // val remote: RemoteEndpoint? // = session.remote
 
     val localAddress = session.localAddress
     val protocolVersion = session.protocolVersion

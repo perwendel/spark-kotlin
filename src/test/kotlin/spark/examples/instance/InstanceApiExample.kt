@@ -48,7 +48,7 @@ fun main(args: Array<String>) {
     }
 
     http.get("/saymy/:name") {
-        params(":name")
+        "Hello: " + params[":name"]
     }
 
     http.get("/redirect") {

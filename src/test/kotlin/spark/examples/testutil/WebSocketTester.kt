@@ -1,7 +1,10 @@
-package spark.kotlin.websocket
+package spark.examples.testutil
 
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest
 import org.eclipse.jetty.websocket.client.WebSocketClient
+import spark.kotlin.stop
+import spark.kotlin.websocket.WebSocketTestClient
+import java.lang.Thread.sleep
 import java.net.URI
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -10,11 +13,11 @@ import kotlin.concurrent.thread
  * Created by Per Wendel on 2017-11-20.
  */
 @Throws(Exception::class)
-fun testWebSocketConversation() {
+fun testWebSocketConversation(stopFunction: () -> Unit) {
 
     thread(start = true) {
 
-        Thread.sleep(1000)
+        sleep(1000)
 
         val uri = "ws://localhost:4567/echo"
         val client = WebSocketClient()
@@ -28,6 +31,10 @@ fun testWebSocketConversation() {
             client.stop()
         }
 
+        thread(start = true) {
+            sleep(1000)
+            stopFunction.invoke()
+        }
     }
 
 

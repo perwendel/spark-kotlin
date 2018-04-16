@@ -17,6 +17,8 @@ package spark.kotlin
 
 import spark.*
 import spark.Service.SPARK_DEFAULT_PORT
+import spark.kotlin.websocket.WebSocket
+import spark.kotlin.websocket.WebSocketHandler
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
@@ -34,12 +36,12 @@ fun config(function: InitParams.() -> Unit) {
     val secure = wrapper.secure
     val static = wrapper.static
 
-    port(wrapper.port)
-    ipAddress(wrapper.ipAddress)
-    threadPool(pool.maxThreads, pool.minThreads, pool.idleTimeoutMillis)
+    Spark.port(wrapper.port)
+    Spark.ipAddress(wrapper.ipAddress)
+    Spark.threadPool(pool.maxThreads, pool.minThreads, pool.idleTimeoutMillis)
 
     if (secure.keystore.file != NIL) {
-        secure(
+        Spark.secure(
                 secure.keystore.file,
                 secure.keystore.password,
                 secure.truststore.file,
@@ -75,6 +77,10 @@ fun config(function: InitParams.() -> Unit) {
 
 private var redirects = Redirects()
 
+fun init() {
+    Spark.init()
+}
+
 fun redirect(function: Redirects.() -> Unit) {
     function(redirects)
 
@@ -82,46 +88,12 @@ fun redirect(function: Redirects.() -> Unit) {
 }
 
 /**
- * Sets the port. 0 then an arbitrary available port will be used
+ * The port used by Spark
  */
-private fun port(number: Int) {
-    Spark.port(number)
-}
-
-/**
- * Set the connection to be secure (HTTPS)
- */
-private fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String) {
-    Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword)
-}
-
-/**
- * Set the connection to be secure (HTTPS)
- */
-private fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean) {
-    Spark.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
-}
-
-/**
- * Sets the ip address
- */
-private fun ipAddress(ipAddress: String) {
-    Spark.ipAddress(ipAddress)
-}
-
-/**
- * Sets the embedded server's thread pool max size.
- */
-private fun threadPool(maxSize: Int) {
-    Spark.threadPool(maxSize)
-}
-
-/**
- * Sets the embedded server's thread pool max size, minSize and idle timeout (ms)
- */
-private fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int) {
-    Spark.threadPool(maxSize, minSize, idleTimeoutMillis)
-}
+val port: Int
+    get() {
+        return Spark.port()
+    }
 
 
 //----------------- Route & filter mappings -----------------//
@@ -241,7 +213,7 @@ fun connect(path: String, accepts: String = DEFAULT_ACCEPT, templateEngine: Temp
     }), templateEngine)
 }
 
-fun before(filter: Filter, accepts: String = DEFAULT_ACCEPT) {
+fun before(filter: Filter) {
     Spark.before(filter)
 }
 
@@ -279,8 +251,6 @@ fun internalServerError(function: RouteHandler.() -> Any) {
     }
 }
 
-//----------------- TODO: Web sockets -----------------//
-
 //----------------- exception mapping -----------------//
 
 fun <T : Exception> exception(exceptionClass: KClass<T>, function: ExceptionHandler.() -> Unit) {
@@ -314,6 +284,23 @@ fun stop() {
     Spark.stop()
 }
 
+/**
+ * TODO
+ */
+fun webSocket(path: String, function: WebSocket.() -> Unit) {
+
+    val webSocket = WebSocket()
+    function(webSocket)
+
+    println("websocket = " + webSocket)
+
+    val wsHandler = WebSocketHandler(webSocket)
+
+    println("adding websocket")
+
+    Spark.webSocket(path, wsHandler)
+}
+
 // STATIC API END
 
 /**
@@ -338,8 +325,6 @@ fun ignite(function: InitParams.() -> Unit): Http {
     val pool = wrapper.pool
     val secure = wrapper.secure
     val static = wrapper.static
-
-    println("wrapper: " + wrapper)
 
     val http = Service.ignite()
             .port(wrapper.port)
@@ -388,7 +373,7 @@ fun ignite(function: InitParams.() -> Unit): Http {
  *
  * @para service The [Spark] service that will be wrapped.
  */
-class Http(val service: Service) {
+class Http(private val service: Service) {
 
     val DEFAULT_ACCEPT = "*/*"
 
@@ -515,7 +500,7 @@ class Http(val service: Service) {
         }), templateEngine)
     }
 
-    fun before(filter: Filter, accepts: String = DEFAULT_ACCEPT) {
+    fun before(filter: Filter) {
         service.before(filter)
     }
 
@@ -554,68 +539,25 @@ class Http(val service: Service) {
         }
     }
 
-    //----------------- exception mapping -----------------//
+    /**
+     * Maps functionality to be executed when an exception occurs during routing
+     */
     fun <T : Exception> exception(exceptionClass: KClass<T>, function: ExceptionHandler.() -> Unit) {
         service.exception(exceptionClass.java, spark.ExceptionHandler(fun(e, req, res) {
             function(ExceptionHandler(e, req, res))
         }))
     }
 
-    // TODO: Remove ALL FLUENT AND OTHER
-
     /**
-     * Gets the port
+     * The port used by the Spark instance.
      */
-    fun port(): Int {
-        return service.port()
-    }
+    val port: Int
+        get () {
+            return service.port()
+        }
 
-    /**
-     * Sets the port. 0 then an arbitrary available port will be used
-     */
-    fun port(number: Int): Http {
-        service.port(number)
-        return this
-    }
-
-    /**
-     * Set the connection to be secure (HTTPS)
-     */
-    fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String): Http {
-        service.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword)
-        return this
-    }
-
-    /**
-     * Set the connection to be secure (HTTPS)
-     */
-    fun secure(keyStoreFile: String, keyStorePassword: String, truststoreFile: String, truststorePassword: String, needsClientCert: Boolean): Http {
-        service.secure(keyStoreFile, keyStorePassword, truststoreFile, truststorePassword, needsClientCert)
-        return this
-    }
-
-    /**
-     * Sets the ip address
-     */
-    fun ipAddress(ipAddress: String): Http {
-        service.ipAddress(ipAddress)
-        return this
-    }
-
-    /**
-     * Sets the embedded server's thread pool max size.
-     */
-    fun threadPool(maxSize: Int): Http {
-        service.threadPool(maxSize)
-        return this
-    }
-
-    /**
-     * Sets the embedded server's thread pool max size, minSize and idle timeout (ms)
-     */
-    fun threadPool(maxSize: Int, minSize: Int, idleTimeoutMillis: Int): Http {
-        service.threadPool(maxSize, minSize, idleTimeoutMillis)
-        return this
+    fun init() {
+        service.init()
     }
 
     /**
@@ -623,5 +565,22 @@ class Http(val service: Service) {
      */
     fun stop() {
         service.stop()
+    }
+
+    /**
+     * TODO
+     */
+    fun webSocket(path: String, function: WebSocket.() -> Unit) {
+
+        val webSocket = WebSocket()
+        function(webSocket)
+
+        println("websocket = " + webSocket)
+
+        val wsHandler = WebSocketHandler(webSocket)
+
+        println("adding websocket")
+
+        service.webSocket(path, wsHandler)
     }
 }

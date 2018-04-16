@@ -21,6 +21,159 @@ import spark.Response
 import spark.Session
 
 /**
+ * Query params. For DSL purposes.
+ */
+class QueryParams(private val request: Request) {
+
+    val size: Int
+        get() {
+            return request.queryParams().size
+        }
+
+    fun contains(name: String): Boolean {
+        return request.queryParams().contains(name)
+    }
+
+    fun isEmpty(): Boolean {
+        return request.queryParams().isEmpty()
+    }
+
+    fun iterator(): Iterator<String> {
+        return request.queryParams().iterator()
+    }
+
+    operator fun get(name: String): String {
+        return request.queryParams(name)
+    }
+
+    fun values(name: String): MutableSet<String> {
+        val values = mutableSetOf<String>()
+        values.addAll(request.queryParamsValues(name))
+        return values
+    }
+
+    override fun toString(): String {
+        return request.queryParams().toString()
+    }
+
+    fun raw(): Set<String> {
+        return request.queryParams()
+    }
+
+}
+
+/**
+ * Request attributes. For DSL purposes.
+ */
+class Attributes(private val request: Request) {
+
+    val size: Int
+        get() {
+            return request.attributes().size
+        }
+
+    fun iterator(): MutableIterator<String> {
+        return request.attributes().iterator()
+    }
+
+    fun contains(name: String): Boolean {
+        return request.attributes().contains(name)
+    }
+
+    fun isEmpty(): Boolean {
+        return request.attributes().isEmpty()
+    }
+
+    operator fun get(name: String): String {
+        return request.attribute(name)
+    }
+
+    operator fun set(name: String, value: String) {
+        request.attribute(name, value)
+    }
+
+    override fun toString(): String {
+        return request.attributes().toString()
+    }
+
+    fun raw(): Set<String> {
+        return request.attributes()
+    }
+
+}
+
+/**
+ * Path params. For DSL purposes.
+ */
+class PathParams(private val request: Request) {
+
+    val size: Int
+        get() {
+            return request.params().size
+        }
+
+    fun contains(name: String): Boolean {
+        return request.params().containsKey(name)
+    }
+
+    fun isEmpty(): Boolean {
+        return request.params().isEmpty()
+    }
+
+    operator fun get(name: String): String {
+        return request.params(name)
+    }
+
+    override fun toString(): String {
+        return request.params().toString()
+    }
+
+    fun raw(): Map<String, String> {
+        return request.params()
+    }
+}
+
+/**
+ * Splat functionality. DSL purposes.
+ */
+class Splat(private val splat: Array<out String>) {
+
+    operator fun get(index: Int): String {
+        return splat[index]
+    }
+
+    val size: Int
+        get() {
+            return splat.size
+        }
+
+    override fun toString(): String {
+
+        if (splat.isEmpty())
+            return "[]"
+
+        val iterator = splat.iterator()
+
+        val sb = StringBuilder()
+        sb.append('[')
+
+        while (iterator.hasNext()) {
+
+            val element = iterator.next()
+            sb.append(element)
+
+            if (!iterator.hasNext()) {
+                return sb.append(']').toString()
+            }
+            sb.append(',').append(' ')
+        }
+
+        return sb.toString()
+    }
+
+}
+
+/**
  * Handles routes and makes Kotlin sugar possible.
  *
  * @param request the Spark [Request].
@@ -28,76 +181,23 @@ import spark.Session
  */
 open class RouteHandler(val request: Request, val response: Response) {
 
-    // Implicit access of Request functions
+    // Implicit access of Request functionality
 
-    /**
-     * Gets the request path parameter.
-     */
-    fun params(name: String): String {
-        return request.params(name)
-    }
+    val params = PathParams(request)
+    val queryParams = QueryParams(request)
+    val attributes = Attributes(request)
+    val splat = Splat(request.splat())
 
-    /**
-     * Gets all request path parameters.
-     */
-    fun params(): MutableMap<String, String>? {
-        return request.params();
-    }
-
-    /**
-     * Gets the request splat (wildcard) parameters.
-     */
-    fun splat(): Array<out String>? {
-        return request.splat()
-    }
+    val queryMap: QueryParamsMap
+        get() {
+            return request.queryMap()
+        }
 
     /**
      * Gets the request content type.
      */
     fun contentType(): String {
         return request.contentType()
-    }
-
-    /**
-     * Gets the request query param.
-     */
-    fun queryParams(key: String): String {
-        return request.queryParams(key)
-    }
-
-    /**
-     * Gets the request queryMap.
-     */
-    fun queryMap(): QueryParamsMap {
-        return request.queryMap()
-    }
-
-    /**
-     * Gets the request queryMap for key.
-     */
-    fun queryMap(key: String): QueryParamsMap {
-        return request.queryMap(key)
-    }
-
-    /**
-     * Gets request attribute.
-     */
-    fun attribute(key: String): String {
-        return request.attribute(key);
-    }
-
-    /**
-     * Sets request attribute.
-     */
-    fun attribute(key: String, value: String) {
-        request.attribute(key, value);
-    }
-
-    /**
-     * Gets the request attributes.
-     */
-    fun attributes(): MutableSet<String>? {
-        return request.attributes();
     }
 
     /**

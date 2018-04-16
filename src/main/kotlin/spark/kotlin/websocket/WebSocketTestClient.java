@@ -8,6 +8,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 @WebSocket
@@ -25,6 +26,11 @@ public class WebSocketTestClient {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         closeLatch.countDown();
+    }
+
+    @OnWebSocketMessage
+    public void onMessage(Session session, String message) {
+        System.out.println("onMessage in client, message = " + message);
     }
 
     @OnWebSocketConnect

@@ -14,35 +14,28 @@ class WebSocketHandler(val webSocket: spark.kotlin.websocket.WebSocket) {
 
     @OnWebSocketConnect
     fun connected(session: Session) {
-        println("[WebSocketHandler] on opened")
-        webSocket.connectedFunction(Connected(WebSocketSession(session)))
+        webSocket.openedFunction(Opened(WebSocketSession(session)))
     }
 
     @OnWebSocketClose
     fun closed(session: Session, statusCode: Int, reason: String) {
-        println("[WebSocketHandler] closed")
-
         try {
             webSocket.closedFunction(Closed(WebSocketSession(session), statusCode, reason))
         } catch (th: Throwable) {
             th.printStackTrace()
         }
-
-        println("[WSH] after")
     }
 
     @OnWebSocketMessage
     @Throws(IOException::class)
     fun message(session: Session, message: String) {
-        println("[WebSocketHandler] Got: " + message)
-        webSocket.messageFunction(Message(WebSocketSession(session), message))
+        webSocket.receivedFunction(Message(WebSocketSession(session), message))
 
         // session!!.remote.sendString(message)
     }
 
     @OnWebSocketError
     fun error(session: Session, cause: Throwable) {
-        println("[WebSocketHandler] Error: " + cause)
         webSocket.errorFunction(Error(WebSocketSession(session), cause))
     }
 }
