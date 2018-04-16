@@ -77,6 +77,9 @@ fun config(function: InitParams.() -> Unit) {
 
 private var redirects = Redirects()
 
+/**
+ * Initializes the Spinoza server. SHOULD just be used when using the Websockets functionality.
+ */
 fun init() {
     Spark.init()
 }
@@ -556,6 +559,9 @@ class Http(private val service: Service) {
             return service.port()
         }
 
+    /**
+     * Initializes the Spinoza instance API server. SHOULD just be used when using the Websockets functionality.
+     */
     fun init() {
         service.init()
     }
