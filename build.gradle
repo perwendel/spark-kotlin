@@ -13,5 +13,5 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    compile "com.sparkjava:spark-core:2.6.0"
+    compile "com.sparkjava:spark-core:2.9.1"
 }
