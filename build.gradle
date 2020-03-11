@@ -5,14 +5,14 @@ plugins {
 }
 
 group 'com.sparkjava'
-version '1.0.0-SNAPSHOT'
+version '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     api "com.sparkjava:spark-core:2.9.1"
 }
 
