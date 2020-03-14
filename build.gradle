@@ -9,10 +9,12 @@ version '1.0.0'
 
 repositories {
     mavenCentral()
+    maven { url 'http//jitpackio' }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    api "com.sparkjava:spark-core:2.9.1"
     api "com.sparkjava:spark-core:2.9.1"
 }
 
