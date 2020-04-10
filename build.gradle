@@ -1,24 +1,36 @@
-group 'com.sparkjava'
-version '1.0-SNAPSHOT'
-
-buildscript {
-    ext.kotlin_version = '1.1.2-2'
-
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.70'
+    id 'maven-publish'
 }
 
-apply plugin: 'kotlin'
+group 'com.sparkjava'
+version '1.0.0'
 
 repositories {
     mavenCentral()
+    maven { url 'http//jitpackio' }
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile "com.sparkjava:spark-core:2.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    api "com.sparkjava:spark-core:2.9.1"
+    api "com.sparkjava:spark-core:2.9.1"
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            versionMapping {
+                allVariants {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
 }

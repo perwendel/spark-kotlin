@@ -20,7 +20,7 @@ import spark.Service.SPARK_DEFAULT_PORT
 import kotlin.reflect.KClass
 
 // STATIC API BEGIN
-val DEFAULT_ACCEPT = "*/*"
+const val DEFAULT_ACCEPT = "*/*"
 
 // TODO: this is a prototype
 fun config(function: InitParams.() -> Unit) {
